@@ -6,8 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "bin":{
-    "mooveit-memcached": "./index.js"
+  "bin": {
+    "mooveit-memcached": "src/index.js"
   },
   "author": "Juan Papazian",
   "license": "ISC"
