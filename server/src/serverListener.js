@@ -1,6 +1,10 @@
 const listener = (socket) => {
-    socket.write('Echo server\r\n');
-    socket.pipe(socket);
+    const dataParserModule = require("./dataParser");
+    this.dataParser = dataParserModule.Parser();
+
+    socket.on('data', (data) => {
+        this.dataParser.parseData(data);
+    });
 };
 
 exports.listener = listener;

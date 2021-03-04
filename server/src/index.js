@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-var net             = require('net');
-var config          = require('./config');
-var serverListener  = require('./serverListener');
+const net             = require('net');
+const config          = require('./config');
+const serverListener  = require('./serverListener');
 
 var server = net.createServer(serverListener.listener);
 
