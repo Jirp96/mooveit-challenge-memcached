@@ -3,7 +3,11 @@ const listener = (socket) => {
     this.dataParser = dataParserModule.Parser();
 
     socket.on('data', (data) => {
-        this.dataParser.parseData(data);
+        let result = this.dataParser.parseData(data);
+
+        if ( result ){
+            socket.write(result.toString());
+        }
     });
 };
 

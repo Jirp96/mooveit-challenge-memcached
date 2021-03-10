@@ -1,8 +1,9 @@
 const Parser = () => {
-    const config = require('./config');
+    const constants = require('./constants');
+    const ParserStrategyManager = require('./parsers/ParserStrategyManager').ParserStrategyManager;
+    const ErrorResponse = require('./domain/ErrorResponse');
 
     let isBlock = false;
-
 
     let command = '';
     let key = '';
@@ -12,44 +13,48 @@ const Parser = () => {
     let noreply = false;
 
     const parseData = (data) => {
-        if (this.isBlock){
-            parseDataBlock(data);
-        }
-        else {
-            parseLineBlock(data);            
-        }
+        return isBlock ? parseDataBlock(data) : parseLineBlock(data);
     };
 
     const parseDataBlock = (data) => {
-        console.log(data);
+        //TODO: Process all the data block, if it's split
+        ParserStrategyManager.parseCommand(dataTokens);
+        
+        this.isBlock = false;
     };
 
     const parseLineBlock = (data) => {
-        if (data[data.length -1] === config.CR_ASCII && data[data.length -2] === config.LF_ASCII) {
+        let response;
+
+        if (data[data.length -1] === constants.CR_ASCII && data[data.length -2] === constants.LF_ASCII) {            
             let dataString = data.toString();
-            let dataTokens = dataString.split(config.TOKEN_SEPARATOR);
-            
+            let dataTokens = dataString.split(constants.TOKEN_SEPARATOR);            
             this.command = dataTokens[0];
             
             //TODO: extract this 
             switch (this.command) {
-                case config.COMMANDS.SET:
-                    //TODO: call parser for set command
-                    console.log(`Command: ${this.command}\n`);
-                    console.log(`Data tokens: ${dataTokens}\n`);
-                    break;
-            
+                case constants.COMMANDS.SET:
+                    const SetStrategy = require('./parsers/SetCommandStrategy');
+                    ParserStrategyManager.setStrategy(SetStrategy);                    
+                    break;            
                 default:
                     console.log(`Unknown command: ${this.command}`);
                     break;
             }
-
-
-            this.isBlock = true;
+            
+            try {
+                response = ParserStrategyManager.parseCommand(dataTokens);                                
+            } catch (error) {
+                return new ErrorResponse(constants.RESPONSE_TYPES.CLIENT_ERROR, error.message);
+            }     
+            this.isBlock = true;                   
         }
         else {
-            //TODO: error
+            response = new ErrorResponse(constants.RESPONSE_TYPES.CLIENT_ERROR, "Invalid format");
         }
+
+        return response;
+        //TODO: Return response object: type of result, message
     };
 
     return {isBlock, parseData};
