@@ -6,11 +6,11 @@ const ParserStrategyManager = () => {
     };
 
     const parseCommand = (dataTokens) => {
-        this.Strategy.ParseCommand(dataTokens);
+        return this.Strategy.parseCommand(dataTokens);
     }
 
-    const executeCommand = (dataTokens) => {
-        this.Strategy.ExecuteCommand(dataTokens);
+    const executeCommand = (dataTokens, dataBlock) => {
+        return this.Strategy.executeCommand(dataTokens, dataBlock);
     }
 
     return {parseCommand, executeCommand, setStrategy};

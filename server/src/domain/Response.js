@@ -1,7 +1,7 @@
 class Response {
     type = "";
 
-    constructor(type, message){
+    constructor(type){
         this.type = type;
     }
 

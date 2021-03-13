@@ -13,6 +13,19 @@ class ItemRepository {
         return this.items.get(key);
     }
 
+    gets (keys) {
+        let retItems = [];
+
+        keys.forEach(key => {
+            let tmp = this.items.get(key);
+            if ( tmp ){
+                retItems.add();
+            }            
+        });
+
+        return retItems;
+    }
+
     exists (key) {
         return this.items.has(key);
     }

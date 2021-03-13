@@ -1,11 +1,13 @@
 class Item {
     data = [];
+    key;
     storedDate;
     exptime;
     flags;
     
-    constructor(dataBlock, exptime, flags) {
+    constructor(dataBlock, key, exptime, flags) {
         this.data = dataBlock;
+        this.key = key;
         this.storedDate = new Date();
         this.exptime = exptime;
         this.flags = flags;
@@ -26,6 +28,10 @@ class Item {
         }
 
         return expired;
+    }
+
+    toString(){
+        return `${this.key} ${this.flags} ${this.data.length}`;
     }
 }
 

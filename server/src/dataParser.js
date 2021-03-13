@@ -1,26 +1,27 @@
-const Parser = () => {
-    const constants = require('./constants');
-    const ParserStrategyManager = require('./parsers/ParserStrategyManager').ParserStrategyManager;
-    const ErrorResponse = require('./domain/ErrorResponse');
+const constants = require('./constants');
+const ParserStrategyManager = require('./parsers/ParserStrategyManager').ParserStrategyManager;
+const ErrorResponse = require('./domain/ErrorResponse');
+const SetStrategy = require('./parsers/SetCommandStrategy');
+const GetStrategy = require('./parsers/GetCommandStrategy');
 
+const Parser = () => {    
     let isBlock = false;
 
     let command = '';
-    let key = '';
-    let flags = [];
-    let exptime = 0;
-    let bytes = 0;
-    let noreply = false;
+    let dataTokens = [];
 
     const parseData = (data) => {
-        return isBlock ? parseDataBlock(data) : parseLineBlock(data);
+        return this.isBlock ? parseDataBlock(data) : parseLineBlock(data);
     };
 
     const parseDataBlock = (data) => {
-        //TODO: Process all the data block, if it's split
-        ParserStrategyManager.parseCommand(dataTokens);
+        //TODO: Check that all the block was processed before executing
+        //Check with data length.
+        let response = ParserStrategyManager.executeCommand(this.dataTokens, data);
         
         this.isBlock = false;
+
+        return response;
     };
 
     const parseLineBlock = (data) => {
@@ -28,22 +29,25 @@ const Parser = () => {
 
         if (data[data.length -1] === constants.CR_ASCII && data[data.length -2] === constants.LF_ASCII) {            
             let dataString = data.toString();
-            let dataTokens = dataString.split(constants.TOKEN_SEPARATOR);            
-            this.command = dataTokens[0];
+            this.dataTokens = dataString.split(constants.TOKEN_SEPARATOR);            
+            this.command = this.dataTokens[0];
             
             //TODO: extract this 
-            switch (this.command) {
+            switch (this.command.toUpperCase()) {
                 case constants.COMMANDS.SET:
-                    const SetStrategy = require('./parsers/SetCommandStrategy');
                     ParserStrategyManager.setStrategy(SetStrategy);                    
                     break;            
+                case constants.COMMANDS.GET:
+                case constants.COMMANDS.GETS:
+                    ParserStrategyManager.setStrategy(GetStrategy);
+                    break;
                 default:
                     console.log(`Unknown command: ${this.command}`);
                     break;
             }
             
             try {
-                response = ParserStrategyManager.parseCommand(dataTokens);                                
+                response = ParserStrategyManager.parseCommand(this.dataTokens);                                
             } catch (error) {
                 return new ErrorResponse(constants.RESPONSE_TYPES.CLIENT_ERROR, error.message);
             }     
@@ -54,7 +58,6 @@ const Parser = () => {
         }
 
         return response;
-        //TODO: Return response object: type of result, message
     };
 
     return {isBlock, parseData};
