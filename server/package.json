@@ -10,5 +10,8 @@
     "mooveit-memcached": "src/index.js"
   },
   "author": "Juan Papazian",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "biguint-format": "^1.0.2"
+  }
 }

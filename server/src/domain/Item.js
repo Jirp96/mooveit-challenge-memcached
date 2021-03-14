@@ -1,9 +1,13 @@
+var crypto = require('crypto');
+var biguintformat = require('biguint-format');
+
 class Item {
     data = [];
     key;
     storedDate;
     exptime;
     flags;
+    casUnique;
     
     constructor(dataBlock, key, exptime, flags) {
         this.data = dataBlock;
@@ -28,6 +32,10 @@ class Item {
         }
 
         return expired;
+    }
+
+    updateCas(){
+        this.casUnique = biguintformat(crypto.randomBytes(8), 'dec');
     }
 
     toString(){

@@ -13,8 +13,7 @@ class RetrievalResponse extends Response {
         let response = "";
         
         this.items.forEach(item => {
-            let casUnique = 0; //TODO: Add proper 64-bit unique integer, also update & set it on storage
-            response += `VALUE ${item.toString()} ${casUnique}\r\n`;
+            response += `VALUE ${item.toString()} ${item.casUnique}\r\n`;
             response += `${item.data}\r\n`;
         });
 

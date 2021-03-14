@@ -10,7 +10,9 @@ class ItemRepository {
     }
 
     get (key) {
-        return this.items.get(key);
+        let item = this.items.get(key);
+        item.updateCas();
+        return item;
     }
 
     gets (keys) {
@@ -20,6 +22,7 @@ class ItemRepository {
             let tmp = this.items.get(key);
             if ( tmp ){
                 retItems.push(tmp);
+                tmp.updateCas();
             }            
         });
 
