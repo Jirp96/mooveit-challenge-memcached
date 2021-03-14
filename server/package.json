@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "bin": {
     "mooveit-memcached": "src/index.js"
@@ -12,6 +12,7 @@
   "author": "Juan Papazian",
   "license": "ISC",
   "dependencies": {
-    "biguint-format": "^1.0.2"
+    "biguint-format": "^1.0.2",
+    "mocha": "^8.3.2"
   }
 }
