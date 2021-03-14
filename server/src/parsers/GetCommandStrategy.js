@@ -5,16 +5,20 @@ const RetrievalResponse = require("../domain/RetrievalResponse");
 const GetCommandStrategy = () => {
     const parseCommand = (dataTokens) => {
         validateData(dataTokens);        
-        executeCommand();
-    };
-
-    const executeCommand = (dataTokens, dataBlock) => {
-        let keys = dataTokens[1].replace(constants.LF_ASCII, '')
-                    .replace(constants.CR_ASCII, '')
+        
+        let keys = dataTokens[1].replace(constants.CRLF_CHAR, '')
                     .split(constants.TOKEN_SEPARATOR);
 
         let items = itemRepository.gets(keys);
-        return new RetrievalResponse(constants.RESPONSE_TYPES.RETRIEVAL_SUCCESS, items);        
+        return new RetrievalResponse(constants.RESPONSE_TYPES.RETRIEVAL_SUCCESS, items);
+    };
+
+    const executeCommand = (dataTokens, dataBlock) => {
+        return;    
+    };
+
+    const getType = () => {
+        return constants.COMMAND_TYPES.RETRIEVAL;
     };
 
     const validateData = (dataTokens) => {
@@ -28,7 +32,7 @@ const GetCommandStrategy = () => {
 
     }
 
-    return {parseCommand, executeCommand, validateData};
+    return {parseCommand, executeCommand, validateData, getType};
 };
 
 module.exports = GetCommandStrategy();

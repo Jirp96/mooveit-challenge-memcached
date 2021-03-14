@@ -51,7 +51,10 @@ const Parser = () => {
             } catch (error) {
                 return new ErrorResponse(constants.RESPONSE_TYPES.CLIENT_ERROR, error.message);
             }     
-            this.isBlock = true;                   
+
+            if ( ParserStrategyManager.getType() === constants.COMMAND_TYPES.STORAGE ){
+                this.isBlock = true;
+            }
         }
         else {
             response = new ErrorResponse(constants.RESPONSE_TYPES.CLIENT_ERROR, "Invalid format");

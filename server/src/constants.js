@@ -1,6 +1,7 @@
 module.exports = {
     LF_ASCII: 13,
     CR_ASCII: 10,
+    CRLF_CHAR: '\r\n',
     TOKEN_SEPARATOR: ' ',
     MAX_EXPTIME_SECONDS: 60*60*24*30,
     COMMANDS: { 
@@ -20,5 +21,10 @@ module.exports = {
         'EXISTS': 'EXISTS',
         'NOT_FOUND': 'NOT_FOUND',
         'RETRIEVAL_SUCCESS': 'RETRIEVAL_SUCCESS',
-    }
+    },
+    COMMAND_TYPES: {
+        'RETRIEVAL': 'RETRIEVAL',
+        'STORAGE': 'STORAGE',
+        'OTHER': 'OTHER',
+    },
 }

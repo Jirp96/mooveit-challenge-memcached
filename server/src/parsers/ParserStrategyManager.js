@@ -13,7 +13,11 @@ const ParserStrategyManager = () => {
         return this.Strategy.executeCommand(dataTokens, dataBlock);
     }
 
-    return {parseCommand, executeCommand, setStrategy};
+    const getType = () => {
+        return this.Strategy.getType();
+    }
+
+    return {parseCommand, executeCommand, setStrategy, getType};
 };
 
 exports.ParserStrategyManager = ParserStrategyManager();

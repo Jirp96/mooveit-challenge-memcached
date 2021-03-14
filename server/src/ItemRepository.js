@@ -19,7 +19,7 @@ class ItemRepository {
         keys.forEach(key => {
             let tmp = this.items.get(key);
             if ( tmp ){
-                retItems.add();
+                retItems.push(tmp);
             }            
         });
 

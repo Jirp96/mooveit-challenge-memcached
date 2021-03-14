@@ -12,13 +12,19 @@ const SetCommandStrategy = () => {
         let key = dataTokens[1];
         let flags = dataTokens[2];
         let exptime = dataTokens[3];
+        let bytes = parseInt(dataTokens[4].replace(constants.CRLF_CHAR, ''));
 
-        let anItem = new Item(dataBlock, key, exptime, flags);
+        let sanitizedDataBlock = dataBlock.slice(0, bytes);
+        let anItem = new Item(sanitizedDataBlock, key, exptime, flags);
 
         itemRepository.add(key, anItem);
 
         //TODO: consider NoReply
         return new Response(constants.RESPONSE_TYPES.STORED);
+    };
+
+    const getType = () => {
+        return constants.COMMAND_TYPES.STORAGE;
     };
 
     const validateData = (dataTokens) => {
@@ -40,7 +46,7 @@ const SetCommandStrategy = () => {
 
     };
 
-    return {parseCommand, executeCommand, validateData};
+    return {parseCommand, executeCommand, validateData, getType};
 };
 
 module.exports = SetCommandStrategy();
