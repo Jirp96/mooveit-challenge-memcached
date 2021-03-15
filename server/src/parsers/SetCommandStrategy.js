@@ -37,13 +37,14 @@ const SetCommandStrategy = () => {
         }
 
         if ( dataTokens[2] < 0 ) {
-            throw new Error("'Flags' field must be unsigned.")
+            throw new Error("'Flags' field must be unsigned.");
         }
 
         if ( isNaN(dataTokens[3]) ){
             throw new Error("exptime must be a number.");
         }
 
+        return true;
     };
 
     return {parseCommand, executeCommand, validateData, getType};

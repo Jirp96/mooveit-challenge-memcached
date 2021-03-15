@@ -1,5 +1,6 @@
 var crypto = require('crypto');
 var biguintformat = require('biguint-format');
+const constants = require('../constants');
 
 class Item {
     data = [];
@@ -19,10 +20,9 @@ class Item {
 
     isExpired() {
         let expired = false;
-        const config = require('../config');
 
         let currentTime = Math.round((new Date()).getTime() / 1000);
-        if ( this.exptime > config.MAX_EXPTIME_SECONDS ){ 
+        if ( this.exptime > constants.MAX_EXPTIME_SECONDS ){ 
             //Per protocol, exptime is UNIX timestamp
             expired = currentTime >= this.exptime ;
         }
