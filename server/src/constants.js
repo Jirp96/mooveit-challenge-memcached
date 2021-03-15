@@ -9,6 +9,10 @@ module.exports = {
         'GETS': 'GETS',
         'SET': 'SET',
         'ADD': 'ADD',
+        'REPLACE': 'REPLACE',
+        'APPEND': 'APPEND',
+        'PREPEND': 'PREPEND',
+        'CAS': 'CAS'
     },
     MIN_STORAGE_COMMAND_LENGTH: 5,
     MIN_RETRIEVAL_COMMAND_LENGTH: 2,
