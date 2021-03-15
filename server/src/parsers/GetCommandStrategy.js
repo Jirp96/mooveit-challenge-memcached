@@ -30,6 +30,7 @@ const GetCommandStrategy = () => {
             throw new Error("There must be at least one key.");
         }
 
+        return true;
     }
 
     return {parseCommand, executeCommand, validateData, getType};
