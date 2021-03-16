@@ -7,6 +7,7 @@ const AddStrategy = require('./parsers/AddCommandStrategy');
 const ReplaceStrategy = require('./parsers/ReplaceCommandStrategy');
 const AppendStrategy = require('./parsers/AppendCommandStrategy');
 const PrependStrategy = require('./parsers/PrependCommandStrategy');
+const CasStrategy = require('./parsers/CasCommandStrategy');
 
 const Parser = () => {    
     let isBlock = false;
@@ -52,7 +53,10 @@ const Parser = () => {
                     break;
                 case constants.COMMANDS.PREPEND:
                     ParserStrategyManager.setStrategy(PrependStrategy);
-                    break;                    
+                    break;        
+                case constants.COMMANDS.CAS:
+                    ParserStrategyManager.setStrategy(CasStrategy);
+                    break;
                 case constants.COMMANDS.GET:
                 case constants.COMMANDS.GETS:
                     ParserStrategyManager.setStrategy(GetStrategy);

@@ -15,6 +15,7 @@ module.exports = {
         'CAS': 'CAS'
     },
     MIN_STORAGE_COMMAND_LENGTH: 5,
+    MIN_CAS_COMMAND_LENGTH: 6,
     MIN_RETRIEVAL_COMMAND_LENGTH: 2,
     RESPONSE_TYPES: {
         'ERROR': 'ERROR',
