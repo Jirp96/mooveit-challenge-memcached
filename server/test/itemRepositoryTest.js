@@ -4,6 +4,10 @@ var Item = require('../src/domain/Item');
 
 describe('ItemRepository', function() {
   describe('#get()', function() {
+    afterEach(function() {
+      ItemRepository.delete('ex_key');
+    });
+    
     it('should update cas field on get', function() {
         //SETUP
         let anItem = new Item([], 'test_key', 1000000000, 1);

@@ -4,17 +4,25 @@ const Item = require("../domain/Item");
 const Response = require("../domain/Response");
 const BaseCommandStrategy = require("./BaseCommandStrategy");
 
-const SetCommandStrategy = () => {
+const PrependCommandStrategy = () => {
     const parseCommandLine = (dataTokens) => {
         BaseCommandStrategy.validateData(dataTokens);        
     };
 
-    const parseDataBlock = (dataTokens, dataBlock) => {        
+    const parseDataBlock = (dataTokens, dataBlock) => {
         let noReply = dataTokens[5] && dataTokens[5].replace(constants.CRLF_CHAR, '').toLowerCase();
         let anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);
 
-        itemRepository.add(anItem.key, anItem);
+        //TODO: Refactor
+        if ( !itemRepository.exists(anItem.key) ){
+            return new Response(constants.RESPONSE_TYPES.NOT_STORED);
+        }
         
+        let existingItem = itemRepository.get(anItem.key);
+        let combinedDataBlock = anItem.data.concat(existingItem.data);
+        anItem.dataBlock = combinedDataBlock;
+
+        itemRepository.add(anItem.key, anItem);
         if ( noReply && noReply === constants.NO_REPLY ){
             return;
         }
@@ -23,9 +31,9 @@ const SetCommandStrategy = () => {
 
     const getType = () => {
         return constants.COMMAND_TYPES.STORAGE;
-    };    
+    };
 
     return {parseCommandLine, parseDataBlock, getType};
 };
 
-module.exports = SetCommandStrategy();
+module.exports = PrependCommandStrategy();

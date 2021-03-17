@@ -6,12 +6,12 @@ class ItemRepository {
     }
 
     add (key, item) {        
+        item.updateCas();
         this.items.set(key, item);
     }
 
     get (key) {
         let item = this.items.get(key);
-        item.updateCas();
         return item;
     }
 
@@ -20,9 +20,8 @@ class ItemRepository {
 
         keys.forEach(key => {
             let tmp = this.items.get(key);
-            if ( tmp ){
+            if ( !!tmp ){
                 retItems.push(tmp);
-                tmp.updateCas();
             }            
         });
 
