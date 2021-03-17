@@ -3,7 +3,7 @@ const itemRepository = require('../ItemRepository');
 const RetrievalResponse = require("../domain/RetrievalResponse");
 
 const GetCommandStrategy = () => {
-    const parseCommand = (dataTokens) => {
+    const parseCommandLine = (dataTokens) => {
         validateData(dataTokens);        
         
         let keys = dataTokens[1].replace(constants.CRLF_CHAR, '')
@@ -13,7 +13,7 @@ const GetCommandStrategy = () => {
         return new RetrievalResponse(constants.RESPONSE_TYPES.RETRIEVAL_SUCCESS, items);
     };
 
-    const executeCommand = (dataTokens, dataBlock) => {
+    const parseDataBlock = (dataTokens, dataBlock) => {
         return;    
     };
 
@@ -33,7 +33,7 @@ const GetCommandStrategy = () => {
         return true;
     }
 
-    return {parseCommand, executeCommand, validateData, getType};
+    return {parseCommandLine, parseDataBlock, validateData, getType};
 };
 
 module.exports = GetCommandStrategy();

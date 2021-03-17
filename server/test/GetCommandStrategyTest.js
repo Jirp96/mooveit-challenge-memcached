@@ -41,7 +41,7 @@ describe('GetCommandStrategy', function() {
         ItemRepository.add('ex_key', item);
 
         //EXEC
-        let actualResult = GetCommandStrategy.parseCommand(dataTokens, dataBlock);
+        let actualResult = GetCommandStrategy.parseCommandLine(dataTokens, dataBlock);
 
         //ASSERT
         assert.deepStrictEqual(actualResult, expectedResponse);

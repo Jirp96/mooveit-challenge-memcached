@@ -22,7 +22,7 @@ const Parser = () => {
     const parseDataBlock = (data) => {
         //TODO: Check that all the block was processed before executing
         //Check with data length.
-        let response = ParserStrategyManager.executeCommand(this.dataTokens, data);
+        let response = ParserStrategyManager.parseDataBlock(this.dataTokens, data);
         
         this.isBlock = false;
 
@@ -37,40 +37,9 @@ const Parser = () => {
             this.dataTokens = dataString.split(constants.TOKEN_SEPARATOR);            
             this.command = this.dataTokens[0];
             
-            //TODO: extract this 
-            switch (this.command.toUpperCase()) {
-                case constants.COMMANDS.SET:
-                    ParserStrategyManager.setStrategy(SetStrategy);                    
-                    break;            
-                case constants.COMMANDS.ADD:
-                    ParserStrategyManager.setStrategy(AddStrategy);
-                    break;
-                case constants.COMMANDS.REPLACE:
-                    ParserStrategyManager.setStrategy(ReplaceStrategy);
-                    break;
-                case constants.COMMANDS.APPEND:
-                    ParserStrategyManager.setStrategy(AppendStrategy);
-                    break;
-                case constants.COMMANDS.PREPEND:
-                    ParserStrategyManager.setStrategy(PrependStrategy);
-                    break;        
-                case constants.COMMANDS.CAS:
-                    ParserStrategyManager.setStrategy(CasStrategy);
-                    break;
-                case constants.COMMANDS.GET:
-                case constants.COMMANDS.GETS:
-                    ParserStrategyManager.setStrategy(GetStrategy);
-                    break;
-                default:
-                    console.log(`Unknown command: ${this.command}`);
-                    break;
-            }
+            ParserStrategyManager.setStrategy(evaluateStrategy(this.command));
             
-            try {
-                response = ParserStrategyManager.parseCommand(this.dataTokens);                                
-            } catch (error) {
-                return new ErrorResponse(constants.RESPONSE_TYPES.CLIENT_ERROR, error.message);
-            }     
+            response = processLineCommand();
 
             if ( ParserStrategyManager.getType() === constants.COMMAND_TYPES.STORAGE ){
                 this.isBlock = true;
@@ -82,6 +51,54 @@ const Parser = () => {
 
         return response;
     };
+
+    const processLineCommand = () => {
+        let response;
+        try {
+            if ( ParserStrategyManager.getType() === constants.COMMAND_TYPES.STORAGE ){
+                response = ParserStrategyManager.parseCommandLine(this.dataTokens);                                
+            }
+            else {
+                response = ParserStrategyManager.parseDataBlock(this.dataTokens);                                
+            }
+        } catch (error) {
+            return new ErrorResponse(constants.RESPONSE_TYPES.CLIENT_ERROR, error.message);
+        }     
+        return response;
+    };
+
+    const evaluateStrategy = (command) => {
+        let strategy;
+        switch (command.toUpperCase()) {
+            case constants.COMMANDS.SET:
+                strategy = SetStrategy;                    
+                break;            
+            case constants.COMMANDS.ADD:
+                strategy = AddStrategy;
+                break;
+            case constants.COMMANDS.REPLACE:
+                strategy = ReplaceStrategy;
+                break;
+            case constants.COMMANDS.APPEND:
+                strategy = AppendStrategy;
+                break;
+            case constants.COMMANDS.PREPEND:
+                strategy = PrependStrategy;
+                break;        
+            case constants.COMMANDS.CAS:
+                strategy = CasStrategy;
+                break;
+            case constants.COMMANDS.GET:
+            case constants.COMMANDS.GETS:
+                strategy = GetStrategy;
+                break;
+            default:
+                console.log(`Unknown command: ${this.command}`);
+                break;
+        }
+
+        return strategy;
+    }; 
 
     return {isBlock, parseData};
 };
