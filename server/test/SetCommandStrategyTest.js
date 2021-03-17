@@ -2,9 +2,14 @@ var assert = require('assert');
 const SetCommandStrategy = require('../src/parsers/SetCommandStrategy');
 const Response = require('../src/domain/Response');
 const constants = require('../src/constants');
+const ItemRepository = require('../src/ItemRepository');
 
 describe('SetCommandStrategy', function() {
   describe('#executeCommand()', function() {
+    afterEach(function() {
+      ItemRepository.delete('ex_key');
+    });
+
     it('Success', function() {
         //SETUP
         let expectedResponse = new Response(constants.RESPONSE_TYPES.STORED);

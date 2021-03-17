@@ -3,6 +3,7 @@ const BaseCommandStrategy = require('../src/parsers/BaseCommandStrategy');
 const Response = require('../src/domain/Response');
 const constants = require('../src/constants');
 const Item = require('../src/domain/Item');
+const ItemRepository = require('../src/ItemRepository');
 
 describe('BaseCommandStrategy', function() {
   describe('#validateData()', function() {
@@ -46,6 +47,10 @@ describe('BaseCommandStrategy', function() {
   });
 
   describe('#executeCommand()', function() {
+    afterEach(function() {
+      ItemRepository.delete('ex_key');
+    });
+
     it('Success', function() {
         //SETUP
         let dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];

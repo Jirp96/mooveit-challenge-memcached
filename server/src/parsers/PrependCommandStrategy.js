@@ -11,12 +11,12 @@ const PrependCommandStrategy = () => {
 
     const parseDataBlock = (dataTokens, dataBlock) => {
         let anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);
-        if ( itemRepository.exists(anItem.key) ){
+        if ( !itemRepository.exists(anItem.key) ){
             return new Response(constants.RESPONSE_TYPES.NOT_STORED);
         }
         
-        let existingItem = itemRepository.get(key);
-        let combinedDataBlock = anItem.dataBlock.concat(existingItem.dataBlock);
+        let existingItem = itemRepository.get(anItem.key);
+        let combinedDataBlock = anItem.data.concat(existingItem.data);
         anItem.dataBlock = combinedDataBlock;
 
         itemRepository.add(anItem.key, anItem);

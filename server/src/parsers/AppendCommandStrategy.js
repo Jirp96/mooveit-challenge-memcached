@@ -15,8 +15,8 @@ const AppendCommandStrategy = () => {
             return new Response(constants.RESPONSE_TYPES.NOT_STORED);
         }
         
-        let existingItem = itemRepository.get(key);
-        let combinedDataBlock = existingItem.dataBlock.concat(anItem.dataBlock);
+        let existingItem = itemRepository.get(anItem.key);
+        let combinedDataBlock = existingItem.data.concat(anItem.data);
         anItem.dataBlock = combinedDataBlock;
 
         itemRepository.add(anItem.key, anItem);

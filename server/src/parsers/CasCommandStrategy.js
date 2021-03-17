@@ -12,14 +12,14 @@ const CasCommandStrategy = () => {
 
     const parseDataBlock = (dataTokens, dataBlock) => {
         let anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);        
-        let clientCas = dataTokens[4].replace(constants.CRLF_CHAR, '');        
-        let existingItem = itemRepository.get(key);
+        let clientCas = dataTokens[5].replace(constants.CRLF_CHAR, '');        
+        let existingItem = itemRepository.get(anItem.key);
 
-        if ( !!existingItem ){
+        if ( !existingItem ){
             return new Response(constants.RESPONSE_TYPES.NOT_FOUND);
         }
         
-        if ( existingItem.casUnique != clientCas ){
+        if ( !!existingItem.casUnique && existingItem.casUnique != clientCas ){
             return new Response(constants.RESPONSE_TYPES.EXISTS);
         }
         
@@ -33,7 +33,7 @@ const CasCommandStrategy = () => {
     };
 
     const validateData = (dataTokens) => {
-        if ( !dataTokens[4] ){
+        if ( !dataTokens[5] ){
             throw new Error("cas unique can't be null");
         }
 
