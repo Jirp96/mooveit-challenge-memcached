@@ -7,7 +7,7 @@ const BaseStorageCommandStrategy = () => {
         let key = dataTokens[1];
         let flags = dataTokens[2];
         let exptime = dataTokens[3];
-        let bytes = parseInt(dataTokens[4].replace(constants.CRLF_CHAR, ''));
+        let bytes = parseInt(dataTokens[4].replace(constants.CRLF_CHAR, ''));        
 
         let sanitizedDataBlock = dataBlock.slice(0, bytes);
         

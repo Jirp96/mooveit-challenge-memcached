@@ -10,10 +10,14 @@ const SetCommandStrategy = () => {
     };
 
     const parseDataBlock = (dataTokens, dataBlock) => {        
+        let noReply = dataTokens[5] && dataTokens[5].replace(constants.CRLF_CHAR, '').toLowerCase();
         let anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);
 
         itemRepository.add(anItem.key, anItem);
-        //TODO: consider NoReply
+        
+        if ( noReply && noReply === constants.NO_REPLY ){
+            return;
+        }
         return new Response(constants.RESPONSE_TYPES.STORED);
     };
 

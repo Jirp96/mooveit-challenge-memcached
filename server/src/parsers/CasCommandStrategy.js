@@ -11,10 +11,12 @@ const CasCommandStrategy = () => {
     };
 
     const parseDataBlock = (dataTokens, dataBlock) => {
+        let noReply = dataTokens[6];
         let anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);        
         let clientCas = dataTokens[5].replace(constants.CRLF_CHAR, '');        
         let existingItem = itemRepository.get(anItem.key);
 
+        //TODO: Refactor
         if ( !existingItem ){
             return new Response(constants.RESPONSE_TYPES.NOT_FOUND);
         }
@@ -24,7 +26,10 @@ const CasCommandStrategy = () => {
         }
         
         itemRepository.add(anItem.key, anItem);
-        //TODO: consider NoReply
+        
+        if ( noReply && noReply === constants.NO_REPLY ){
+            return;
+        }
         return new Response(constants.RESPONSE_TYPES.STORED);
     };
 

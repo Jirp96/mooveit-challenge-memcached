@@ -4,6 +4,7 @@ module.exports = {
     CRLF_CHAR: '\r\n',
     TOKEN_SEPARATOR: ' ',
     MAX_EXPTIME_SECONDS: 60*60*24*30,
+    NO_REPLY: 'noreply',
     COMMANDS: { 
         'GET': 'GET',
         'GETS': 'GETS',

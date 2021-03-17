@@ -61,5 +61,15 @@ describe('BaseCommandStrategy', function() {
         assert.deepStrictEqual(BaseCommandStrategy.parseItem(dataTokens, dataBlock), expectedResponse);
     });
 
+    it('Success - No Reply', function() {
+      //SETUP
+      let dataTokens = ['SET', 'ex_key', 53, 864100, '11', 'noreply\r\n'];
+      let dataBlock = [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 13, 10];
+      let expectedResponse = new Item(dataBlock.slice(0, dataBlock.length-2), 'ex_key', 864100, 53);
+
+      //ASSERT
+      assert.deepStrictEqual(BaseCommandStrategy.parseItem(dataTokens, dataBlock), expectedResponse);
+  });
+
   });
 });
