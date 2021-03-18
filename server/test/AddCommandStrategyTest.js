@@ -1,4 +1,5 @@
-var assert = require('assert');
+/* eslint-disable max-len */
+const assert = require('assert');
 const AddCommandStrategy = require('../src/parsers/AddCommandStrategy');
 const Response = require('../src/domain/Response');
 const constants = require('../src/constants');
@@ -11,33 +12,32 @@ describe('AddCommandStrategy', function() {
     });
 
     it('Add data - empty key', function() {
-        //SETUP
-        let expectedResponse = new Response(constants.RESPONSE_TYPES.STORED);
-        let dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
-        let dataBlock = [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 13, 10];
+      // SETUP
+      const expectedResponse = new Response(constants.RESPONSE_TYPES.STORED);
+      const dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
+      const dataBlock = [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 13, 10];
 
-        //EXEC
-        let actualResponse = AddCommandStrategy.parseDataBlock(dataTokens, dataBlock);
+      // EXEC
+      const actualResponse = AddCommandStrategy.parseDataBlock(dataTokens, dataBlock);
 
-        //ASSERT
-        assert.deepStrictEqual(actualResponse, expectedResponse);
+      // ASSERT
+      assert.deepStrictEqual(actualResponse, expectedResponse);
     });
 
     it('Does not add - already existing key', function() {
-      //SETUP
+      // SETUP
 
-      let expectedResponse = new Response(constants.RESPONSE_TYPES.NOT_STORED);
-      let dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
-      let dataBlock = [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 13, 10];
+      const expectedResponse = new Response(constants.RESPONSE_TYPES.NOT_STORED);
+      const dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
+      const dataBlock = [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 13, 10];
 
       AddCommandStrategy.parseDataBlock(dataTokens, dataBlock);
 
-      //EXEC
-      let actualResponse = AddCommandStrategy.parseDataBlock(dataTokens, dataBlock);
+      // EXEC
+      const actualResponse = AddCommandStrategy.parseDataBlock(dataTokens, dataBlock);
 
-      //ASSERT
+      // ASSERT
       assert.deepStrictEqual(actualResponse, expectedResponse);
-  });
-
+    });
   });
 });

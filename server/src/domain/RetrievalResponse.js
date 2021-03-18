@@ -1,25 +1,25 @@
-const constants = require("../constants");
-const Response = require("./Response");
+/* eslint-disable require-jsdoc */
+const Response = require('./Response');
 
 class RetrievalResponse extends Response {
     items = [];
 
-    constructor(type, items){
-        super(type);
-        this.items = items;
+    constructor(type, items) {
+      super(type);
+      this.items = items;
     }
 
-    toString(){
-        let response = "";
-        
-        this.items.forEach(item => {
-            response += `VALUE ${item.toString()} ${item.casUnique}\r\n`;
-            response += `${item.data}\r\n`;
-        });
+    toString() {
+      let response = '';
 
-        response += "END\r\n";
+      this.items.forEach((item) => {
+        response += `VALUE ${item.toString()} ${item.casUnique}\r\n`;
+        response += `${item.data}\r\n`;
+      });
 
-        return response;
+      response += 'END\r\n';
+
+      return response;
     }
 }
 

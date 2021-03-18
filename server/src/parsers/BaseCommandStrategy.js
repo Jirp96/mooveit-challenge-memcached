@@ -1,40 +1,45 @@
-const constants = require("../constants");
-const Item = require("../domain/Item");
-const Response = require("../domain/Response");
+/* eslint-disable new-cap */
+const constants = require('../constants');
+const Item = require('../domain/Item');
 
 const BaseStorageCommandStrategy = () => {
-    const parseItem = (dataTokens, dataBlock) => {
-        let key = dataTokens[1];
-        let flags = dataTokens[2];
-        let exptime = dataTokens[3];
-        let bytes = parseInt(dataTokens[4].replace(constants.CRLF_CHAR, ''));        
+  const parseItem = (dataTokens, dataBlock) => {
+    const key = dataTokens[1];
+    const flags = dataTokens[2];
+    const exptime = dataTokens[3];
+    const bytes = parseInt(dataTokens[4].replace(constants.CRLF_CHAR, ''));
 
-        let sanitizedDataBlock = dataBlock.slice(0, bytes);
-        
-        return new Item(sanitizedDataBlock, key, exptime, flags);
-    };
+    const sanitizedDataBlock = dataBlock.slice(0, bytes);
 
-    const validateData = (dataTokens) => {
-        if ( dataTokens.length < constants.MIN_STORAGE_COMMAND_LENGTH ){
-            throw new Error("Invalid arguments for command.");
-        }
+    return new Item(sanitizedDataBlock, key, exptime, flags);
+  };
 
-        if ( dataTokens[1].length <= 0 ){
-            throw new Error("Key must not be empty.");
-        }
+  const validateData = (dataTokens) => {
+    if ( dataTokens.length < constants.MIN_STORAGE_COMMAND_LENGTH ) {
+      throw new Error('Invalid arguments for command.');
+    }
 
-        if ( dataTokens[2] < 0 ) {
-            throw new Error("'Flags' field must be unsigned.");
-        }
+    if ( dataTokens[1].length <= 0 ) {
+      throw new Error('Key must not be empty.');
+    }
 
-        if ( isNaN(dataTokens[3]) ){
-            throw new Error("exptime must be a number.");
-        }
+    if ( dataTokens[2] < 0 ) {
+      throw new Error('\'Flags\' field must be unsigned.');
+    }
 
-        return true;
-    };
+    if ( isNaN(dataTokens[3]) ) {
+      throw new Error('exptime must be a number.');
+    }
 
-    return {parseItem, validateData};
+    return true;
+  };
+
+  const parseNoReply = (noReplyToken) => {
+    return noReplyToken &&
+        noReplyToken.replace(constants.CRLF_CHAR, '').toLowerCase();
+  };
+
+  return {parseItem, validateData, parseNoReply};
 };
 
 module.exports = BaseStorageCommandStrategy();

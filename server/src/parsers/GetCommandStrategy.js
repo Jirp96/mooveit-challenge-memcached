@@ -1,39 +1,41 @@
-const constants = require("../constants");
+/* eslint-disable new-cap */
+const constants = require('../constants');
 const itemRepository = require('../ItemRepository');
-const RetrievalResponse = require("../domain/RetrievalResponse");
+const RetrievalResponse = require('../domain/RetrievalResponse');
 
 const GetCommandStrategy = () => {
-    const parseCommandLine = (dataTokens) => {
-        validateData(dataTokens);        
-        
-        let keys = dataTokens[1].replace(constants.CRLF_CHAR, '')
-                    .split(constants.TOKEN_SEPARATOR);
+  const parseCommandLine = (dataTokens) => {
+    validateData(dataTokens);
 
-        let items = itemRepository.gets(keys);
-        return new RetrievalResponse(constants.RESPONSE_TYPES.RETRIEVAL_SUCCESS, items);
-    };
+    const keys = dataTokens[1].replace(constants.CRLF_CHAR, '')
+        .split(constants.TOKEN_SEPARATOR);
 
-    const parseDataBlock = (dataTokens, dataBlock) => {
-        return;    
-    };
+    const items = itemRepository.gets(keys);
+    // eslint-disable-next-line max-len
+    return new RetrievalResponse(constants.RESPONSE_TYPES.RETRIEVAL_SUCCESS, items);
+  };
 
-    const getType = () => {
-        return constants.COMMAND_TYPES.RETRIEVAL;
-    };
+  const parseDataBlock = (dataTokens, dataBlock) => {
+    return;
+  };
 
-    const validateData = (dataTokens) => {
-        if ( dataTokens.length < constants.MIN_RETRIEVAL_COMMAND_LENGTH ){
-            throw new Error("Invalid arguments for command.");
-        }
+  const getType = () => {
+    return constants.COMMAND_TYPES.RETRIEVAL;
+  };
 
-        if ( dataTokens[1].length <= 0 ){
-            throw new Error("There must be at least one key.");
-        }
-
-        return true;
+  const validateData = (dataTokens) => {
+    if ( dataTokens.length < constants.MIN_RETRIEVAL_COMMAND_LENGTH ) {
+      throw new Error('Invalid arguments for command.');
     }
 
-    return {parseCommandLine, parseDataBlock, validateData, getType};
+    if ( dataTokens[1].length <= 0 ) {
+      throw new Error('There must be at least one key.');
+    }
+
+    return true;
+  };
+
+  return {parseCommandLine, parseDataBlock, validateData, getType};
 };
 
 module.exports = GetCommandStrategy();

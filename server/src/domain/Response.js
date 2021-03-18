@@ -1,12 +1,13 @@
+/* eslint-disable require-jsdoc */
 class Response {
-    type = "";
+    type = '';
 
-    constructor(type){
-        this.type = type;
+    constructor(type) {
+      this.type = type;
     }
 
-    toString(){
-        return `${this.type}\r\n`;
+    toString() {
+      return `${this.type}\r\n`;
     }
 }
 

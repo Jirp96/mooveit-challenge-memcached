@@ -1,4 +1,5 @@
-var assert = require('assert');
+/* eslint-disable max-len */
+const assert = require('assert');
 const SetCommandStrategy = require('../src/parsers/SetCommandStrategy');
 const Response = require('../src/domain/Response');
 const constants = require('../src/constants');
@@ -12,36 +13,35 @@ describe('PrependCommandStrategy', function() {
     });
 
     it('Does not add data - empty key', function() {
-        //SETUP
-        let expectedResponse = new Response(constants.RESPONSE_TYPES.NOT_STORED);        
-        let dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
-        let dataBlock = [119, 111, 114, 108, 100, 13, 10];
+      // SETUP
+      const expectedResponse = new Response(constants.RESPONSE_TYPES.NOT_STORED);
+      const dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
+      const dataBlock = [119, 111, 114, 108, 100, 13, 10];
 
-        //EXEC
-        let actualResponse = PrependCommandStrategy.parseDataBlock(dataTokens, dataBlock);
+      // EXEC
+      const actualResponse = PrependCommandStrategy.parseDataBlock(dataTokens, dataBlock);
 
-        //ASSERT
-        assert.deepStrictEqual(actualResponse, expectedResponse);
+      // ASSERT
+      assert.deepStrictEqual(actualResponse, expectedResponse);
     });
 
     it('Replace data - already existing key', function() {
-      //SETUP
-      let expectedResponse = new Response(constants.RESPONSE_TYPES.STORED);
-      let dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
-      let dataBlock = [119, 111, 114, 108, 100, 13, 10];
-      let newDataBlock = [104, 101, 108, 108, 111, 32];
-      let expectedDataBlock = [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 13, 10];
+      // SETUP
+      const expectedResponse = new Response(constants.RESPONSE_TYPES.STORED);
+      const dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
+      const dataBlock = [119, 111, 114, 108, 100, 13, 10];
+      const newDataBlock = [104, 101, 108, 108, 111, 32];
+      const expectedDataBlock = [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 13, 10];
 
       SetCommandStrategy.parseDataBlock(dataTokens, dataBlock);
 
-      //EXEC
-      let actualResponse = PrependCommandStrategy.parseDataBlock(dataTokens, newDataBlock);
-      let updatedItem = ItemRepository.get('ex_key');
+      // EXEC
+      const actualResponse = PrependCommandStrategy.parseDataBlock(dataTokens, newDataBlock);
+      const updatedItem = ItemRepository.get('ex_key');
 
-      //ASSERT
+      // ASSERT
       assert.deepStrictEqual(actualResponse, expectedResponse);
       assert.deepStrictEqual(expectedDataBlock, updatedItem.dataBlock);
-  });
-
+    });
   });
 });
