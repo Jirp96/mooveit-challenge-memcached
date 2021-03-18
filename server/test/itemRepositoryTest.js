@@ -7,10 +7,22 @@ describe('ItemRepository', function() {
     afterEach(function() {
       ItemRepository.delete('ex_key');
     });
+
+    it('does not return expired key', function() {
+      //SETUP
+      let anItem = new Item([], 'test_key', -1, 1);
+            
+      //EXEC
+      ItemRepository.add(anItem.key, anItem);        
+      let newItem = ItemRepository.get(anItem.key);
+
+      //ASSERTS
+      assert.ok(!newItem);    
+  });
     
     it('should update cas field on get', function() {
         //SETUP
-        let anItem = new Item([], 'test_key', 1000000000, 1);
+        let anItem = new Item([], 'test_key', 100000, 1);
         anItem.updateCas();
 
         let oldCas = anItem.casUnique;
@@ -27,7 +39,7 @@ describe('ItemRepository', function() {
 
     it('should update cas field on gets', function() {
         //SETUP
-        let anItem = new Item([], 'test_key', 1000000000, 1);
+        let anItem = new Item([], 'test_key', 10000, 1);
         anItem.updateCas();
 
         let oldCas = anItem.casUnique;

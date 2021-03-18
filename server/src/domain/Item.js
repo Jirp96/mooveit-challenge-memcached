@@ -26,9 +26,13 @@ class Item {
             //Per protocol, exptime is UNIX timestamp
             expired = currentTime >= this.exptime ;
         }
-        else {
+        else if ( this.exptime > 0 ){
+            //Per protocol, keys with exptime 0 never expire
             let storedDateTime = Math.round((this.storedDate).getTime() / 1000);
             expired = currentTime >= (this.exptime + storedDateTime);
+        }
+        else if ( this.exptime < 0 ){
+            expired = true;
         }
 
         return expired;

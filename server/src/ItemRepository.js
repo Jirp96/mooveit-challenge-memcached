@@ -12,7 +12,7 @@ class ItemRepository {
 
     get (key) {
         let item = this.items.get(key);
-        return item;
+        return !!item && !item.isExpired() ? item : undefined;
     }
 
     gets (keys) {
@@ -20,7 +20,7 @@ class ItemRepository {
 
         keys.forEach(key => {
             let tmp = this.items.get(key);
-            if ( !!tmp ){
+            if ( !!tmp && !tmp.isExpired() ){
                 retItems.push(tmp);
             }            
         });

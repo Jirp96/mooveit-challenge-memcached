@@ -27,6 +27,13 @@ describe('Item', function() {
 
         assert.equal(anItem.isExpired(), false);
     });
+
+    it('should return false for exptime 0', function() {
+      let anItem = new Item([], 'test_key', 0, 1);
+
+      assert.equal(anItem.isExpired(), false);
+  });
+
   });
 
   describe('#toString()', function() {
