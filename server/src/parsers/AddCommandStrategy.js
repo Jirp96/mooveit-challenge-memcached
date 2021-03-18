@@ -26,7 +26,7 @@ const AddCommandStrategy = () => {
 
   const getType = () => {
     return constants.COMMAND_TYPES.STORAGE;
-  };  
+  };
 
   return {parseCommandLine, parseDataBlock, getType};
 };

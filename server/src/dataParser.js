@@ -12,13 +12,17 @@ const PrependStrategy = require('./parsers/PrependCommandStrategy');
 const CasStrategy = require('./parsers/CasCommandStrategy');
 
 const Parser = () => {
-  const isBlock = false;
+  let isBlock = false;
 
   // const command = '';
   // const dataTokens = [];
 
   const parseData = (data) => {
-    return this.isBlock ? parseDataBlock(data) : parseLineBlock(data);
+    try {
+      return isBlock ? parseDataBlock(data) : parseLineBlock(data);
+    } catch (error) {
+      return new ErrorResponse(constants.RESPONSE_TYPES.SERVER_ERROR, error.message);
+    }
   };
 
   const parseDataBlock = (data) => {
@@ -26,34 +30,29 @@ const Parser = () => {
     // Check with data length.
 
     // eslint-disable-next-line max-len
-    const response = ParserStrategyManager.parseDataBlock(this.dataTokens, data);
+    const response = ParserStrategyManager.parseDataBlock(dataTokens, data);
 
-    this.isBlock = false;
+    isBlock = false;
 
     return response;
   };
 
   const parseLineBlock = (data) => {
-    // if (data[data.length -1] === constants.CR_ASCII && data[data.length -2] === constants.LF_ASCII) {
     const dataString = data.toString();
-    this.dataTokens = dataString.split(constants.TOKEN_SEPARATOR);
-    this.command = this.dataTokens[0];
+    dataTokens = dataString.split(constants.TOKEN_SEPARATOR);
+    command = dataTokens[0];
 
     try {
-      ParserStrategyManager.setStrategy(evaluateStrategy(this.command));
+      ParserStrategyManager.setStrategy(evaluateStrategy(command));
     } catch (error) {
       return new ErrorResponse(constants.RESPONSE_TYPES.CLIENT_ERROR, error.message);
     }
 
-
     const response = processLineCommand();
 
     if ( ParserStrategyManager.getType() === constants.COMMAND_TYPES.STORAGE ) {
-      this.isBlock = true;
+      isBlock = true;
     }
-    /* } else {
-      response = new ErrorResponse(constants.RESPONSE_TYPES.CLIENT_ERROR, 'Invalid format');
-    }*/
 
     return response;
   };
@@ -61,11 +60,7 @@ const Parser = () => {
   const processLineCommand = () => {
     let response;
     try {
-      if ( ParserStrategyManager.getType() === constants.COMMAND_TYPES.STORAGE ) {
-        response = ParserStrategyManager.parseCommandLine(this.dataTokens);
-      } else {
-        response = ParserStrategyManager.parseDataBlock(this.dataTokens);
-      }
+      response = ParserStrategyManager.parseCommandLine(dataTokens);
     } catch (error) {
       return new ErrorResponse(constants.RESPONSE_TYPES.CLIENT_ERROR, error.message);
     }
