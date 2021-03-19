@@ -1,7 +1,6 @@
 /* eslint-disable new-cap */
 const constants = require('../constants');
 const itemRepository = require('../ItemRepository');
-const Response = require('../domain/Response');
 const BaseCommandStrategy = require('./BaseCommandStrategy');
 
 const SetCommandStrategy = () => {
@@ -10,15 +9,10 @@ const SetCommandStrategy = () => {
   };
 
   const parseDataBlock = (dataTokens, dataBlock) => {
-    const noReply = BaseCommandStrategy.parseNoReply(dataTokens[5]);
     const anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);
-
     itemRepository.add(anItem.key, anItem);
 
-    if ( noReply && noReply === constants.NO_REPLY ) {
-      return;
-    }
-    return new Response(constants.RESPONSE_TYPES.STORED);
+    return BaseCommandStrategy.parseStoredResponse(dataTokens[5]);
   };
 
   const getType = () => {

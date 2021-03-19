@@ -11,12 +11,11 @@ const CasCommandStrategy = () => {
   };
 
   const parseDataBlock = (dataTokens, dataBlock) => {
-    const noReply = dataTokens[6];
     const anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);
-    const clientCas = dataTokens[5].replace(constants.CRLF_CHAR, '');
     const existingItem = itemRepository.get(anItem.key);
 
-    // TODO: Refactor
+    const clientCas = dataTokens[5].replace(constants.CRLF_CHAR, '');
+
     if ( !existingItem ) {
       return new Response(constants.RESPONSE_TYPES.NOT_FOUND);
     }
@@ -27,10 +26,7 @@ const CasCommandStrategy = () => {
 
     itemRepository.add(anItem.key, anItem);
 
-    if ( noReply && noReply === constants.NO_REPLY ) {
-      return;
-    }
-    return new Response(constants.RESPONSE_TYPES.STORED);
+    return BaseCommandStrategy.parseStoredResponse(dataTokens[6]);
   };
 
   const getType = () => {

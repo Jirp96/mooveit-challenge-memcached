@@ -26,9 +26,6 @@ const Parser = () => {
   };
 
   const parseDataBlock = (data) => {
-    // TODO: Check that all the block was processed before executing
-    // Check with data length.
-
     // eslint-disable-next-line max-len
     const response = ParserStrategyManager.parseDataBlock(dataTokens, data);
 

@@ -10,23 +10,16 @@ const PrependCommandStrategy = () => {
   };
 
   const parseDataBlock = (dataTokens, dataBlock) => {
-    const noReply = BaseCommandStrategy.parseNoReply(dataTokens[5]);
     const anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);
-
-    // TODO: Refactor
     if ( !itemRepository.exists(anItem.key) ) {
       return new Response(constants.RESPONSE_TYPES.NOT_STORED);
     }
 
     const existingItem = itemRepository.get(anItem.key);
-    const combinedDataBlock = anItem.data.concat(existingItem.data);
-    anItem.dataBlock = combinedDataBlock;
-
+    anItem.dataBlock = anItem.data.concat(existingItem.data);
     itemRepository.add(anItem.key, anItem);
-    if ( noReply && noReply === constants.NO_REPLY ) {
-      return;
-    }
-    return new Response(constants.RESPONSE_TYPES.STORED);
+
+    return BaseCommandStrategy.parseStoredResponse(dataTokens[5]);
   };
 
   const getType = () => {

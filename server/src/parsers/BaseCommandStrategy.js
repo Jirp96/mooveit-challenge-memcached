@@ -1,6 +1,7 @@
 /* eslint-disable new-cap */
 const constants = require('../constants');
 const Item = require('../domain/Item');
+const Response = require('../domain/Response');
 
 const BaseStorageCommandStrategy = () => {
   const parseItem = (dataTokens, dataBlock) => {
@@ -39,7 +40,15 @@ const BaseStorageCommandStrategy = () => {
         noReplyToken.replace(constants.CRLF_CHAR, '').toLowerCase();
   };
 
-  return {parseItem, validateData, parseNoReply};
+  const parseStoredResponse = (noReplyToken) => {
+    const noReply = parseNoReply(noReplyToken);
+    if ( noReply && noReply === constants.NO_REPLY ) {
+      return;
+    }
+    return new Response(constants.RESPONSE_TYPES.STORED);
+  };
+
+  return {parseItem, validateData, parseStoredResponse};
 };
 
 module.exports = BaseStorageCommandStrategy();

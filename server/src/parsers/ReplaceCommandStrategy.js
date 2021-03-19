@@ -10,19 +10,14 @@ const ReplaceCommandStrategy = () => {
   };
 
   const parseDataBlock = (dataTokens, dataBlock) => {
-    const noReply = BaseCommandStrategy.parseNoReply(dataTokens[5]);
     const anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);
 
-    // TODO: Extract
     if ( !itemRepository.exists(anItem.key) ) {
       return new Response(constants.RESPONSE_TYPES.NOT_STORED);
     }
 
     itemRepository.add(anItem.key, anItem);
-    if ( noReply && noReply === constants.NO_REPLY ) {
-      return;
-    }
-    return new Response(constants.RESPONSE_TYPES.STORED);
+    return BaseCommandStrategy.parseStoredResponse(dataTokens[5]);
   };
 
   const getType = () => {
