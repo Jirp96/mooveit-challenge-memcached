@@ -1,39 +1,32 @@
-const constants = require("../constants");
+/* eslint-disable new-cap */
+const constants = require('../constants');
 const itemRepository = require('../ItemRepository');
-const Item = require("../domain/Item");
-const Response = require("../domain/Response");
-const BaseCommandStrategy = require("./BaseCommandStrategy");
+const Response = require('../domain/Response');
+const BaseCommandStrategy = require('./BaseCommandStrategy');
 
 const PrependCommandStrategy = () => {
-    const parseCommandLine = (dataTokens) => {
-        BaseCommandStrategy.validateData(dataTokens);        
-    };
+  const parseCommandLine = (dataTokens) => {
+    BaseCommandStrategy.validateData(dataTokens);
+  };
 
-    const parseDataBlock = (dataTokens, dataBlock) => {
-        let noReply = dataTokens[5] && dataTokens[5].replace(constants.CRLF_CHAR, '').toLowerCase();
-        let anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);
+  const parseDataBlock = (dataTokens, dataBlock) => {
+    const anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);
+    if ( !itemRepository.exists(anItem.key) ) {
+      return new Response(constants.RESPONSE_TYPES.NOT_STORED);
+    }
 
-        //TODO: Refactor
-        if ( !itemRepository.exists(anItem.key) ){
-            return new Response(constants.RESPONSE_TYPES.NOT_STORED);
-        }
-        
-        let existingItem = itemRepository.get(anItem.key);
-        let combinedDataBlock = anItem.data.concat(existingItem.data);
-        anItem.dataBlock = combinedDataBlock;
+    const existingItem = itemRepository.get(anItem.key);
+    anItem.dataBlock = anItem.data.concat(existingItem.data);
+    itemRepository.add(anItem.key, anItem);
 
-        itemRepository.add(anItem.key, anItem);
-        if ( noReply && noReply === constants.NO_REPLY ){
-            return;
-        }
-        return new Response(constants.RESPONSE_TYPES.STORED);
-    };
+    return BaseCommandStrategy.parseStoredResponse(dataTokens[5]);
+  };
 
-    const getType = () => {
-        return constants.COMMAND_TYPES.STORAGE;
-    };
+  const getType = () => {
+    return constants.COMMAND_TYPES.STORAGE;
+  };
 
-    return {parseCommandLine, parseDataBlock, getType};
+  return {parseCommandLine, parseDataBlock, getType};
 };
 
 module.exports = PrependCommandStrategy();

@@ -1,4 +1,5 @@
-var assert = require('assert');
+/* eslint-disable max-len */
+const assert = require('assert');
 const ReplaceCommandStrategy = require('../src/parsers/ReplaceCommandStrategy');
 const SetCommandStrategy = require('../src/parsers/SetCommandStrategy');
 const Response = require('../src/domain/Response');
@@ -12,33 +13,32 @@ describe('ReplaceCommandStrategy', function() {
     });
 
     it('Does not replace data - empty key', function() {
-        //SETUP
-        let expectedResponse = new Response(constants.RESPONSE_TYPES.NOT_STORED);        
-        let dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
-        let dataBlock = [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 13, 10];
+      // SETUP
+      const expectedResponse = new Response(constants.RESPONSE_TYPES.NOT_STORED);
+      const dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
+      const dataBlock = [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 13, 10];
 
-        //EXEC
-        let actualResponse = ReplaceCommandStrategy.parseDataBlock(dataTokens, dataBlock);
+      // EXEC
+      const actualResponse = ReplaceCommandStrategy.parseDataBlock(dataTokens, dataBlock);
 
-        //ASSERT
-        assert.deepStrictEqual(actualResponse, expectedResponse);
+      // ASSERT
+      assert.deepStrictEqual(actualResponse, expectedResponse);
     });
 
     it('Replace data - already existing key', function() {
-      //SETUP
+      // SETUP
 
-      let expectedResponse = new Response(constants.RESPONSE_TYPES.STORED);
-      let dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
-      let dataBlock = [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 13, 10];
+      const expectedResponse = new Response(constants.RESPONSE_TYPES.STORED);
+      const dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
+      const dataBlock = [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 13, 10];
 
       SetCommandStrategy.parseDataBlock(dataTokens, dataBlock);
 
-      //EXEC
-      let actualResponse = ReplaceCommandStrategy.parseDataBlock(dataTokens, dataBlock);
+      // EXEC
+      const actualResponse = ReplaceCommandStrategy.parseDataBlock(dataTokens, dataBlock);
 
-      //ASSERT
+      // ASSERT
       assert.deepStrictEqual(actualResponse, expectedResponse);
-  });
-
+    });
   });
 });

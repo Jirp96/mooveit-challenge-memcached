@@ -1,51 +1,47 @@
-const constants = require("../constants");
+/* eslint-disable new-cap */
+const constants = require('../constants');
 const itemRepository = require('../ItemRepository');
-const Item = require("../domain/Item");
-const Response = require("../domain/Response");
-const BaseCommandStrategy = require("./BaseCommandStrategy");
+const Response = require('../domain/Response');
+const BaseCommandStrategy = require('./BaseCommandStrategy');
 
 const CasCommandStrategy = () => {
-    const parseCommandLine = (dataTokens) => {
-        BaseCommandStrategy.validateData(dataTokens);        
-        validateData(dataTokens);        
-    };
+  const parseCommandLine = (dataTokens) => {
+    BaseCommandStrategy.validateData(dataTokens);
+    validateData(dataTokens);
+  };
 
-    const parseDataBlock = (dataTokens, dataBlock) => {
-        let noReply = dataTokens[6];
-        let anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);        
-        let clientCas = dataTokens[5].replace(constants.CRLF_CHAR, '');        
-        let existingItem = itemRepository.get(anItem.key);
+  const parseDataBlock = (dataTokens, dataBlock) => {
+    const anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);
+    const existingItem = itemRepository.get(anItem.key);
 
-        //TODO: Refactor
-        if ( !existingItem ){
-            return new Response(constants.RESPONSE_TYPES.NOT_FOUND);
-        }
-        
-        if ( !!existingItem.casUnique && existingItem.casUnique != clientCas ){
-            return new Response(constants.RESPONSE_TYPES.EXISTS);
-        }
-        
-        itemRepository.add(anItem.key, anItem);
-        
-        if ( noReply && noReply === constants.NO_REPLY ){
-            return;
-        }
-        return new Response(constants.RESPONSE_TYPES.STORED);
-    };
+    const clientCas = dataTokens[5].replace(constants.CRLF_CHAR, '');
 
-    const getType = () => {
-        return constants.COMMAND_TYPES.STORAGE;
-    };
+    if ( !existingItem ) {
+      return new Response(constants.RESPONSE_TYPES.NOT_FOUND);
+    }
 
-    const validateData = (dataTokens) => {
-        if ( !dataTokens[5] ){
-            throw new Error("cas unique can't be null");
-        }
+    if ( !!existingItem.casUnique && existingItem.casUnique != clientCas ) {
+      return new Response(constants.RESPONSE_TYPES.EXISTS);
+    }
 
-        return true;
-    };
+    itemRepository.add(anItem.key, anItem);
 
-    return {parseCommandLine, parseDataBlock, validateData, getType};
+    return BaseCommandStrategy.parseStoredResponse(dataTokens[6]);
+  };
+
+  const getType = () => {
+    return constants.COMMAND_TYPES.STORAGE;
+  };
+
+  const validateData = (dataTokens) => {
+    if ( !dataTokens[5] ) {
+      throw new Error('cas unique can\'t be null');
+    }
+
+    return true;
+  };
+
+  return {parseCommandLine, parseDataBlock, validateData, getType};
 };
 
 module.exports = CasCommandStrategy();

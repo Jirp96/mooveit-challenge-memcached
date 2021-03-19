@@ -1,40 +1,39 @@
-const Item = require("./domain/Item");
-
+/* eslint-disable require-jsdoc */
 class ItemRepository {
-    constructor () {
-        this.items = new Map();
-    }
+  constructor() {
+    this.items = new Map();
+  }
 
-    add (key, item) {        
-        item.updateCas();
-        this.items.set(key, item);
-    }
+  add(key, item) {
+    item.updateCas();
+    this.items.set(key, item);
+  }
 
-    get (key) {
-        let item = this.items.get(key);
-        return item;
-    }
+  get(key) {
+    const item = this.items.get(key);
+    return !!item && !item.isExpired() ? item : undefined;
+  }
 
-    gets (keys) {
-        let retItems = [];
+  gets(keys) {
+    const retItems = [];
 
-        keys.forEach(key => {
-            let tmp = this.items.get(key);
-            if ( !!tmp ){
-                retItems.push(tmp);
-            }            
-        });
+    keys.forEach((key) => {
+      const tmp = this.items.get(key);
+      if ( !!tmp && !tmp.isExpired() ) {
+        retItems.push(tmp);
+      }
+    });
 
-        return retItems;
-    }
+    return retItems;
+  }
 
-    exists (key) {
-        return this.items.has(key);
-    }
+  exists(key) {
+    return this.items.has(key);
+  }
 
-    delete (key) {
-        return this.items.delete(key);
-    }
+  delete(key) {
+    return this.items.delete(key);
+  }
 }
 
 module.exports = new ItemRepository();

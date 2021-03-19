@@ -1,23 +1,24 @@
+/* eslint-disable new-cap */
 const ParserStrategyManager = () => {
-    let Strategy;
+  // let Strategy;
 
-    const setStrategy = (aStrategy) => {
-        this.Strategy = aStrategy;
-    };
+  const setStrategy = (aStrategy) => {
+    Strategy = aStrategy;
+  };
 
-    const parseCommandLine = (dataTokens) => {
-        return this.Strategy.parseCommandLine(dataTokens);
-    }
+  const parseCommandLine = (dataTokens) => {
+    return Strategy.parseCommandLine(dataTokens);
+  };
 
-    const parseDataBlock = (dataTokens, dataBlock) => {
-        return this.Strategy.parseDataBlock(dataTokens, dataBlock);
-    }
+  const parseDataBlock = (dataTokens, dataBlock) => {
+    return Strategy.parseDataBlock(dataTokens, dataBlock);
+  };
 
-    const getType = () => {
-        return this.Strategy.getType();
-    }
+  const getType = () => {
+    return Strategy.getType();
+  };
 
-    return {parseCommandLine, parseDataBlock, setStrategy, getType};
+  return {parseCommandLine, parseDataBlock, setStrategy, getType};
 };
 
 exports.ParserStrategyManager = ParserStrategyManager();
