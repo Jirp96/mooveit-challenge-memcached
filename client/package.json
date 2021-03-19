@@ -10,5 +10,8 @@
     "memcached-client": "src/index.js"
   },
   "author": "Juan Papazian",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "memcached": "^2.2.2"
+  }
 }

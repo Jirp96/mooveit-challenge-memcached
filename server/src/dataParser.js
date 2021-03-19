@@ -19,7 +19,21 @@ const Parser = () => {
 
   const parseData = (data) => {
     try {
-      return isBlock ? parseDataBlock(data) : parseLineBlock(data);
+      // TODO: fix
+      const endLineIndex = data.findIndex((elem, i, arr) => {
+        return elem == 13 && i+1 < arr.length && arr[i+1] == 10;
+      });
+      const commandLineData = data.slice(0, endLineIndex);
+      const dataBlock = data.slice(endLineIndex + 2, data.length);
+
+      let response = parseLineBlock(commandLineData);
+
+      if ( !response && dataBlock) {
+        response = parseDataBlock(dataBlock);
+      }
+
+      return response;
+      // return isBlock ? parseDataBlock(data) : parseLineBlock(data);
     } catch (error) {
       return new ErrorResponse(constants.RESPONSE_TYPES.SERVER_ERROR, error.message);
     }

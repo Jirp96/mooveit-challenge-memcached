@@ -1,21 +1,20 @@
 var net = require('net');
+var Memcached = require('memcached');
 
-var client = new net.Socket();
 var config = require('./config');
+var userMenu = require('./clientMenu');
 
-client.connect(config.PORT, config.IP, function() {
-	console.log('Connected');
-	client.write('Hello, server! Love, Client.');
-});
+var memcachedClient = new Memcached(`${config.IP}:${config.PORT}`);
 
-client.on('data', function(data) {
-	console.log('Received: ' + data);	
-});
+userMenu.showMenu();
+/*memcachedClient.set('ex_key', 'hello world', 80000, function(err){
+    console.log("SET succesful");
+    console.log(err);
 
-client.on('error', function(err) {
-	console.log('Error: ' + err);	
-});
+    memcachedClient.get('ex_key', function(err, data){
+        console.log("GET succesful");
+        console.log(err);
+        console.log(data);
+    });
+});*/
 
-client.on('close', function() {
-	console.log('Connection closed');
-});
