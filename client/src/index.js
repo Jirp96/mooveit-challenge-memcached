@@ -1,20 +1,21 @@
 var net = require('net');
 var Memcached = require('memcached');
+let readline = require('readline');
 
-var config = require('./config');
-var userMenu = require('./clientMenu');
+const config = require('./config');
+const userMenu = require('./clientMenu');
+const CommandProcessor = require('./CommandProcessor');
+
+let rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
 
 var memcachedClient = new Memcached(`${config.IP}:${config.PORT}`);
 
+CommandProcessor.setReadLine(rl);
+CommandProcessor.setClient(memcachedClient);
+userMenu.setCommandProcessor(CommandProcessor);
+userMenu.setReadLine(rl);
 userMenu.showMenu();
-/*memcachedClient.set('ex_key', 'hello world', 80000, function(err){
-    console.log("SET succesful");
-    console.log(err);
-
-    memcachedClient.get('ex_key', function(err, data){
-        console.log("GET succesful");
-        console.log(err);
-        console.log(data);
-    });
-});*/
 

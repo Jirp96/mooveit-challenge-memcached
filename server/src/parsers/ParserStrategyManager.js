@@ -1,7 +1,5 @@
 /* eslint-disable new-cap */
 const ParserStrategyManager = () => {
-  // let Strategy;
-
   const setStrategy = (aStrategy) => {
     Strategy = aStrategy;
   };
