@@ -1,5 +1,4 @@
 /* eslint-disable new-cap */
-const constants = require('../constants');
 const itemRepository = require('../ItemRepository');
 const BaseCommandStrategy = require('./BaseCommandStrategy');
 
@@ -15,11 +14,7 @@ const SetCommandStrategy = () => {
     return BaseCommandStrategy.parseStoredResponse(dataTokens[5]);
   };
 
-  const getType = () => {
-    return constants.COMMAND_TYPES.STORAGE;
-  };
-
-  return {parseCommandLine, parseDataBlock, getType};
+  return {parseCommandLine, parseDataBlock};
 };
 
 module.exports = SetCommandStrategy();

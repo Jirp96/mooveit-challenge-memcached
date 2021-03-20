@@ -1,21 +1,20 @@
-var net = require('net');
+const Memcached = require('memcached');
+const readline = require('readline');
 
-var client = new net.Socket();
-var config = require('./config');
+const config = require('./config');
+const userMenu = require('./clientMenu');
+const CommandProcessor = require('./CommandProcessor');
 
-client.connect(config.PORT, config.IP, function() {
-	console.log('Connected');
-	client.write('Hello, server! Love, Client.');
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
 });
 
-client.on('data', function(data) {
-	console.log('Received: ' + data);	
-});
+const memcachedClient = new Memcached(`${config.IP}:${config.PORT}`);
 
-client.on('error', function(err) {
-	console.log('Error: ' + err);	
-});
+CommandProcessor.setReadLine(rl);
+CommandProcessor.setClient(memcachedClient);
+userMenu.setCommandProcessor(CommandProcessor);
+userMenu.setReadLine(rl);
+userMenu.showMenu();
 
-client.on('close', function() {
-	console.log('Connection closed');
-});

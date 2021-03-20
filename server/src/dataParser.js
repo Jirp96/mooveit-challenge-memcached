@@ -12,14 +12,23 @@ const PrependStrategy = require('./parsers/PrependCommandStrategy');
 const CasStrategy = require('./parsers/CasCommandStrategy');
 
 const Parser = () => {
-  let isBlock = false;
-
-  // const command = '';
-  // const dataTokens = [];
+  const findCLRF = (elem, i, arr) => {
+    return elem == constants.LF_ASCII && i+1 < arr.length && arr[i+1] == constants.CR_ASCII;
+  };
 
   const parseData = (data) => {
     try {
-      return isBlock ? parseDataBlock(data) : parseLineBlock(data);
+      const endLineIndex = data.findIndex(findCLRF);
+      const commandLineData = data.slice(0, endLineIndex);
+      const dataBlock = data.slice(endLineIndex + 2, data.length);
+
+      let response = parseLineBlock(commandLineData);
+
+      if ( !response && dataBlock) {
+        response = parseDataBlock(dataBlock);
+      }
+
+      return response;
     } catch (error) {
       return new ErrorResponse(constants.RESPONSE_TYPES.SERVER_ERROR, error.message);
     }
@@ -28,9 +37,6 @@ const Parser = () => {
   const parseDataBlock = (data) => {
     // eslint-disable-next-line max-len
     const response = ParserStrategyManager.parseDataBlock(dataTokens, data);
-
-    isBlock = false;
-
     return response;
   };
 
@@ -46,10 +52,6 @@ const Parser = () => {
     }
 
     const response = processLineCommand();
-
-    if ( ParserStrategyManager.getType() === constants.COMMAND_TYPES.STORAGE ) {
-      isBlock = true;
-    }
 
     return response;
   };
@@ -96,7 +98,7 @@ const Parser = () => {
     return strategy;
   };
 
-  return {isBlock, parseData};
+  return {parseData};
 };
 
 exports.Parser = Parser;

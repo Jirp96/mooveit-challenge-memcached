@@ -29,10 +29,6 @@ const CasCommandStrategy = () => {
     return BaseCommandStrategy.parseStoredResponse(dataTokens[6]);
   };
 
-  const getType = () => {
-    return constants.COMMAND_TYPES.STORAGE;
-  };
-
   const validateData = (dataTokens) => {
     if ( !dataTokens[5] ) {
       throw new Error('cas unique can\'t be null');
@@ -41,7 +37,7 @@ const CasCommandStrategy = () => {
     return true;
   };
 
-  return {parseCommandLine, parseDataBlock, validateData, getType};
+  return {parseCommandLine, parseDataBlock, validateData};
 };
 
 module.exports = CasCommandStrategy();

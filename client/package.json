@@ -10,5 +10,10 @@
     "memcached-client": "src/index.js"
   },
   "author": "Juan Papazian",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.22.0",
+    "eslint-config-google": "^0.14.0",
+    "memcached": "^2.2.2"
+  }
 }

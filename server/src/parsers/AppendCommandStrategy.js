@@ -12,7 +12,6 @@ const AppendCommandStrategy = () => {
   const parseDataBlock = (dataTokens, dataBlock) => {
     const anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);
 
-    // TODO extract:
     if ( !itemRepository.exists(anItem.key) ) {
       return new Response(constants.RESPONSE_TYPES.NOT_STORED);
     }
@@ -26,11 +25,7 @@ const AppendCommandStrategy = () => {
     return BaseCommandStrategy.parseStoredResponse(dataTokens[5]);
   };
 
-  const getType = () => {
-    return constants.COMMAND_TYPES.STORAGE;
-  };
-
-  return {parseCommandLine, parseDataBlock, getType};
+  return {parseCommandLine, parseDataBlock};
 };
 
 module.exports = AppendCommandStrategy();
