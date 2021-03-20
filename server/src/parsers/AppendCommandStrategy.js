@@ -25,11 +25,7 @@ const AppendCommandStrategy = () => {
     return BaseCommandStrategy.parseStoredResponse(dataTokens[5]);
   };
 
-  const getType = () => {
-    return constants.COMMAND_TYPES.STORAGE;
-  };
-
-  return {parseCommandLine, parseDataBlock, getType};
+  return {parseCommandLine, parseDataBlock};
 };
 
 module.exports = AppendCommandStrategy();

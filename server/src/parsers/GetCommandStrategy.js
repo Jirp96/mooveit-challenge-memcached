@@ -19,10 +19,6 @@ const GetCommandStrategy = () => {
     return;
   };
 
-  const getType = () => {
-    return constants.COMMAND_TYPES.RETRIEVAL;
-  };
-
   const validateData = (dataTokens) => {
     if ( dataTokens.length < constants.MIN_RETRIEVAL_COMMAND_LENGTH ) {
       throw new Error('Invalid arguments for command.');
@@ -35,7 +31,7 @@ const GetCommandStrategy = () => {
     return true;
   };
 
-  return {parseCommandLine, parseDataBlock, validateData, getType};
+  return {parseCommandLine, parseDataBlock, validateData};
 };
 
 module.exports = GetCommandStrategy();

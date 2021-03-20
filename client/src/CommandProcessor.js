@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 const CommandProcessor = () => {
   let rl;
   let memcachedClient;
@@ -13,51 +14,50 @@ const CommandProcessor = () => {
   const processRetrievalCommand = (retrievalCommand) => {
     rl.question('Key: ', (key) => {
       retrievalCommand.apply(memcachedClient, [key, processRetrievalResponse]);
-    });      
+    });
   };
-  
+
   const processStorageCommand = (storageCommand, memcachedClient) => {
-      rl.question('Key to SET: ', (key) => {
-          rl.question('Data: ', (dataBlock) => {
-            rl.question('Expiring time: ', (exptime) => {
-              storageCommand.apply(memcachedClient ,[key, dataBlock, parseInt(exptime), processStorageResponse]);
-            });          
-          });        
+    rl.question('Key to SET: ', (key) => {
+      rl.question('Data: ', (dataBlock) => {
+        rl.question('Expiring time: ', (exptime) => {
+          storageCommand.apply(memcachedClient,
+              [key, dataBlock, parseInt(exptime), processStorageResponse]);
         });
+      });
+    });
   };
 
   const processStorageResponse = (err) => {
-    if (err){
-      console.log("There was an error with the command: " + err.message);
-    }
-    else {
-        console.log("Success!");
+    if (err) {
+      console.log('There was an error with the command: ' + err.message);
+    } else {
+      console.log('Success!');
     }
   };
 
   const processRetrievalResponse = (err, data) => {
-    if (err){
+    if (err) {
       console.log(err);
-    }
-    else if (data) {
-      Object.keys(data).forEach(key => {
+    } else if (data) {
+      Object.keys(data).forEach((key) => {
         console.log(`${key}: ${data[key]}`);
       });
-    }
-    else {
+    } else {
       console.log('Empty response');
     }
   };
 
-  const processCas = (storageCommand) => {
+  const processCas = (storageCommand, memcachedClient) => {
     rl.question('Key to SET: ', (key) => {
       rl.question('Data: ', (dataBlock) => {
         rl.question('Expiring time: ', (exptime) => {
-          rl.question('Cas unique: ', (casUnique) => {  
-              storageCommand(key, dataBlock, parseInt(exptime), parseInt(casUnique), processStorageResponse);
+          rl.question('Cas unique: ', (casUnique) => {
+            storageCommand.apply(memcachedClient, [key, dataBlock, 
+              parseInt(exptime), parseInt(casUnique), processStorageResponse]);
           });
-        });          
-      });        
+        });
+      });
     });
   };
 
@@ -72,7 +72,7 @@ const CommandProcessor = () => {
   const processSet = () => {
     processStorageCommand(memcachedClient.set, memcachedClient);
   };
-  
+
   const processAdd = () => {
     processStorageCommand(memcachedClient.add, memcachedClient);
   };
@@ -90,10 +90,9 @@ const CommandProcessor = () => {
   };
 
 
-  return {setReadLine, setClient, processGet, processGets, processAdd, 
+  return {setReadLine, setClient, processGet, processGets, processAdd,
     processSet, processReplace, processAppend, processPrepend, processCas};
-}
-
+};
 
 
 module.exports = CommandProcessor();
