@@ -8,9 +8,13 @@ const serverListener = require('./serverListener');
 const server = net.createServer(serverListener.listener);
 
 // TODO: check for ECONNRESET
-server.on('clientError', (err, socket) => {
+/* server.on('end', () => {
+  console.log('Client disconnected');
+});
+
+server.on('error', (err, socket) => {
   if (err.code === 'ECONNRESET' || !socket.writable) socket.end('Client error\n');
   console.log('client error\n', err);
-});
+});*/
 
 server.listen(config.PORT, config.IP);

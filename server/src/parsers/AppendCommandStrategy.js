@@ -12,7 +12,6 @@ const AppendCommandStrategy = () => {
   const parseDataBlock = (dataTokens, dataBlock) => {
     const anItem = BaseCommandStrategy.parseItem(dataTokens, dataBlock);
 
-    // TODO extract:
     if ( !itemRepository.exists(anItem.key) ) {
       return new Response(constants.RESPONSE_TYPES.NOT_STORED);
     }
