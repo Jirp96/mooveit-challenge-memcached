@@ -11,15 +11,20 @@ class ItemRepository {
 
   get(key) {
     const item = this.items.get(key);
-    return !!item && !item.isExpired() ? item : undefined;
+
+    if ( !!item && item.isExpired() ) {
+      this.items.delete(item.key);
+      return undefined;
+    }
+    return item;
   }
 
   gets(keys) {
     const retItems = [];
 
     keys.forEach((key) => {
-      const tmp = this.items.get(key);
-      if ( !!tmp && !tmp.isExpired() ) {
+      const tmp = this.get(key);
+      if ( tmp ) {
         retItems.push(tmp);
       }
     });
@@ -28,11 +33,19 @@ class ItemRepository {
   }
 
   exists(key) {
-    return this.items.has(key);
+    return this.get(key) ? true : false;
   }
 
   delete(key) {
     return this.items.delete(key);
+  }
+
+  getSize() {
+    return this.items.size;
+  }
+
+  getKeys() {
+    return this.items.keys();
   }
 }
 
