@@ -27,7 +27,11 @@ const Menu = () => {
 
     rl.on('line', function(line) {
       selectedOption = parseInt(line);
-      processSelectedOption(selectedOption);
+      try {
+        processSelectedOption(selectedOption);
+      } catch (err) {
+        console.log(`There was an error: ${err.message}`);
+      }
     });
     return selectedOption;
   };

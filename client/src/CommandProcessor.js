@@ -18,11 +18,17 @@ const CommandProcessor = () => {
   };
 
   const processStorageCommand = (storageCommand, memcachedClient) => {
-    rl.question('Key to SET: ', (key) => {
+    rl.question('Key: ', (key) => {
       rl.question('Data: ', (dataBlock) => {
-        rl.question('Expiring time: ', (exptime) => {
+        rl.question('Expiring time: ', (exptimeStr) => {
+          let exptime;
+          try {
+            exptime = parseInt(exptimeStr);
+          } catch (err) {
+            throw new Error('exptime must be a number');
+          }
           storageCommand.apply(memcachedClient,
-              [key, dataBlock, parseInt(exptime), processStorageResponse]);
+              [key, dataBlock, exptime, processStorageResponse]);
         });
       });
     });
@@ -51,10 +57,23 @@ const CommandProcessor = () => {
   const processCas = (storageCommand, memcachedClient) => {
     rl.question('Key to SET: ', (key) => {
       rl.question('Data: ', (dataBlock) => {
-        rl.question('Expiring time: ', (exptime) => {
-          rl.question('Cas unique: ', (casUnique) => {
-            storageCommand.apply(memcachedClient, [key, dataBlock, 
-              parseInt(exptime), parseInt(casUnique), processStorageResponse]);
+        rl.question('Expiring time: ', (exptimeStr) => {
+          let exptime;
+          try {
+            exptime = parseInt(exptimeStr);
+          } catch (err) {
+            throw new Error('exptime must be a number');
+          }
+
+          rl.question('Cas unique: ', (casUniqueStr) => {
+            let casUnique;
+            try {
+              casUnique = parseInt(casUniqueStr);
+            } catch (err) {
+              throw new Error('cas unique must be a number');
+            }
+            storageCommand.apply(memcachedClient, [key, dataBlock,
+              exptime, casUnique, processStorageResponse]);
           });
         });
       });

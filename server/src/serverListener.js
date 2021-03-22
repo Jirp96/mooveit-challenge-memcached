@@ -9,7 +9,7 @@ const listener = (socket) => {
 
   socket.on('error', (err, socket) => {
     if (err.code === 'ECONNRESET' || !socket.writable) console.log('Connection reset\n');
-    console.log('Client error\n', err);
+    else console.log(err);
   });
 
   dataParser = dataParserModule.Parser();
