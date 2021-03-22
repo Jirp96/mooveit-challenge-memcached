@@ -1,0 +1,27 @@
+config:
+  target: "localhost"
+  tcp:
+    port: 5455
+  phases:
+    - arrivalRate: 200
+      duration: 60
+  engines:
+    tcp: {}
+
+scenarios:
+  - name: "SET new keys"
+    engine: tcp
+    flow:
+      - count: 1
+        loop:
+        - send:
+            payload: "SET ex_key 53 864100 11\r\nhello world\r\n"
+  - name: "SET & GET keys"
+    engine: tcp
+    flow:
+      - count: 2
+        loop:
+        - send:
+            payload: "SET ex_key 53 864100 11\r\nhello world\r\n"
+        - send:
+            payload: "GET ex_key\r\n"
