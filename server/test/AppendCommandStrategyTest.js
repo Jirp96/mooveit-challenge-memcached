@@ -16,7 +16,7 @@ describe('AppendCommandStrategy', function() {
       // SETUP
       const expectedResponse = new Response(constants.RESPONSE_TYPES.NOT_STORED);
       const dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
-      const dataBlock = [119, 111, 114, 108, 100, 13, 10];
+      const dataBlock = Buffer.from([119, 111, 114, 108, 100, 13, 10]);
 
       // EXEC
       const actualResponse = AppendCommandStrategy.parseDataBlock(dataTokens, dataBlock);
@@ -29,9 +29,9 @@ describe('AppendCommandStrategy', function() {
       // SETUP
       const expectedResponse = new Response(constants.RESPONSE_TYPES.STORED);
       const dataTokens = ['SET', 'ex_key', 53, 864100, '11\r\n'];
-      const dataBlock = [104, 101, 108, 108, 111, 32];
-      const newDataBlock = [119, 111, 114, 108, 100, 13, 10];
-      const expectedDataBlock = [104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 13, 10];
+      const dataBlock = Buffer.from([104, 101, 108, 108, 111, 32]);
+      const newDataBlock = Buffer.from([119, 111, 114, 108, 100, 13, 10]);
+      const expectedDataBlock = Buffer.from([104, 101, 108, 108, 111, 32, 119, 111, 114, 108, 100, 13, 10]);
 
       SetCommandStrategy.parseDataBlock(dataTokens, dataBlock);
 
@@ -41,7 +41,7 @@ describe('AppendCommandStrategy', function() {
 
       // ASSERT
       assert.deepStrictEqual(actualResponse, expectedResponse);
-      assert.deepStrictEqual(expectedDataBlock, updatedItem.dataBlock);
+      assert.deepStrictEqual(expectedDataBlock, updatedItem.data);
     });
   });
 });

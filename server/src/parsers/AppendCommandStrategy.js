@@ -17,8 +17,7 @@ const AppendCommandStrategy = () => {
     }
 
     const existingItem = itemRepository.get(anItem.key);
-    const combinedDataBlock = existingItem.data.concat(anItem.data);
-    anItem.dataBlock = combinedDataBlock;
+    anItem.data = Buffer.from([...existingItem.data].concat(...anItem.data));
 
     itemRepository.add(anItem.key, anItem);
 

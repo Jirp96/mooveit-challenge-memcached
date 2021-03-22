@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 /* eslint-disable new-cap */
 const CommandProcessor = () => {
   let rl;
@@ -11,13 +12,13 @@ const CommandProcessor = () => {
     memcachedClient = client;
   };
 
-  const processRetrievalCommand = (retrievalCommand) => {
+  const processRetrievalCommand = (retrievalCommand, memcachedClient, callbackFn) => {
     rl.question('Key: ', (key) => {
-      retrievalCommand.apply(memcachedClient, [key, processRetrievalResponse]);
+      retrievalCommand.apply(memcachedClient, [key, callbackFn]);
     });
   };
 
-  const processStorageCommand = (storageCommand, memcachedClient) => {
+  const processStorageCommand = (storageCommand, memcachedClient, callback) => {
     rl.question('Key: ', (key) => {
       rl.question('Data: ', (dataBlock) => {
         rl.question('Expiring time: ', (exptimeStr) => {
@@ -28,33 +29,22 @@ const CommandProcessor = () => {
             throw new Error('exptime must be a number');
           }
           storageCommand.apply(memcachedClient,
-              [key, dataBlock, exptime, processStorageResponse]);
+              [key, dataBlock, exptime, callback]);
         });
       });
     });
   };
 
-  const processStorageResponse = (err) => {
-    if (err) {
-      console.log('There was an error with the command: ' + err.message);
-    } else {
-      console.log('Success!');
-    }
-  };
-
-  const processRetrievalResponse = (err, data) => {
-    if (err) {
-      console.log(err);
-    } else if (data) {
-      Object.keys(data).forEach((key) => {
-        console.log(`${key}: ${data[key]}`);
+  const processStorageAddCommand = (storageCommand, memcachedClient, callback) => {
+    rl.question('Key: ', (key) => {
+      rl.question('Data: ', (dataBlock) => {
+        storageCommand.apply(memcachedClient,
+            [key, dataBlock, callback]);
       });
-    } else {
-      console.log('Empty response');
-    }
+    });
   };
 
-  const processCas = (storageCommand, memcachedClient) => {
+  const processCasCommand = (storageCommand, memcachedClient, callback) => {
     rl.question('Key to SET: ', (key) => {
       rl.question('Data: ', (dataBlock) => {
         rl.question('Expiring time: ', (exptimeStr) => {
@@ -66,48 +56,50 @@ const CommandProcessor = () => {
           }
 
           rl.question('Cas unique: ', (casUniqueStr) => {
-            let casUnique;
             try {
-              casUnique = parseInt(casUniqueStr);
+              parseInt(casUniqueStr);
             } catch (err) {
               throw new Error('cas unique must be a number');
             }
             storageCommand.apply(memcachedClient, [key, dataBlock,
-              exptime, casUnique, processStorageResponse]);
+              casUniqueStr, exptime, callback]);
           });
         });
       });
     });
   };
 
-  const processGet = () => {
-    processRetrievalCommand(memcachedClient.get, memcachedClient);
+  const processGet = (callback) => {
+    processRetrievalCommand(memcachedClient.get, memcachedClient, callback);
   };
 
-  const processGets = () => {
-    processRetrievalCommand(memcachedClient.gets, memcachedClient);
+  const processGets = (callback) => {
+    processRetrievalCommand(memcachedClient.gets, memcachedClient, callback);
   };
 
-  const processSet = () => {
-    processStorageCommand(memcachedClient.set, memcachedClient);
+  const processSet = (callback) => {
+    processStorageCommand(memcachedClient.set, memcachedClient, callback);
   };
 
-  const processAdd = () => {
-    processStorageCommand(memcachedClient.add, memcachedClient);
+  const processAdd = (callback) => {
+    processStorageCommand(memcachedClient.add, memcachedClient, callback);
   };
 
-  const processReplace = () => {
-    processStorageCommand(memcachedClient.replace, memcachedClient);
+  const processReplace = (callback) => {
+    processStorageCommand(memcachedClient.replace, memcachedClient, callback);
   };
 
-  const processAppend = () => {
-    processStorageCommand(memcachedClient.append, memcachedClient);
+  const processAppend = (callback) => {
+    processStorageAddCommand(memcachedClient.append, memcachedClient, callback);
   };
 
-  const processPrepend = () => {
-    processStorageCommand(memcachedClient.prepend, memcachedClient);
+  const processPrepend = (callback) => {
+    processStorageAddCommand(memcachedClient.prepend, memcachedClient, callback);
   };
 
+  const processCas = (callback) => {
+    processCasCommand(memcachedClient.cas, memcachedClient, callback);
+  };
 
   return {setReadLine, setClient, processGet, processGets, processAdd,
     processSet, processReplace, processAppend, processPrepend, processCas};

@@ -16,7 +16,7 @@ const PrependCommandStrategy = () => {
     }
 
     const existingItem = itemRepository.get(anItem.key);
-    anItem.dataBlock = anItem.data.concat(existingItem.data);
+    anItem.data = Buffer.from([...anItem.data].concat(...existingItem.data));
     itemRepository.add(anItem.key, anItem);
 
     return BaseCommandStrategy.parseStoredResponse(dataTokens[5]);
